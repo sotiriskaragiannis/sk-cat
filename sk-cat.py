@@ -3,9 +3,30 @@
 
 import argparse
 
+READ_FROM_STDIN_STRING = "-"
+
+# Initialise the parser
 parser = argparse.ArgumentParser("concatenate and print files")
 parser.add_argument("filenames", nargs='+', help="filenames of the files to concatenate and print", type=str)
 args = parser.parse_args()
+
+
 for filename in args.filenames:
-    print(f'Processing file: {filename}')
-    # Add your file processing code here
+
+    if filename != READ_FROM_STDIN_STRING:
+        try:
+            with open(filename) as file:
+                print(file.read())
+
+        except FileNotFoundError:
+            print(f"file {filename} was not found")
+
+        except IsADirectoryError:
+            print(f"{filename} is a directory and not a file")
+
+        except:
+            print("An exception occurred")
+
+    # Read from stdin
+    else:
+        print("stdin reading...")
