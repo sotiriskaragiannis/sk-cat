@@ -16,7 +16,7 @@ for filename in args.filenames:
     if filename != READ_FROM_STDIN_STRING:
         try:
             with open(filename) as file:
-                print(file.read())
+                print(file.read(), end="")
 
         except FileNotFoundError:
             print(f"file {filename} was not found")
@@ -29,4 +29,12 @@ for filename in args.filenames:
 
     # Read from stdin
     else:
-        print("stdin reading...")
+        # print("stdin reading...")
+        while True:
+            try:
+                print(input(""))
+            except KeyboardInterrupt:
+                print("")
+                exit()
+            except:
+                break
