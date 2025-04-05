@@ -15,7 +15,7 @@ def stdinMode():
         except:
             break
 
-def filenameMode():
+def filenameMode(filename):
     try:
         with open(filename) as file:
             print(file.read(), end="")
@@ -27,7 +27,7 @@ def filenameMode():
         print(f"{filename} is a directory and not a file")
 
     except:
-        print("An exception occurred")
+        print("an error occurred")
 
 
 def main(args=None):
@@ -42,7 +42,7 @@ def main(args=None):
     else:
         for filename in args.filenames:
             if filename != READ_FROM_STDIN_STRING:
-                filenameMode()
+                filenameMode(filename)
             else:
                 stdinMode()
 
