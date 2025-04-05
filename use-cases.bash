@@ -1,39 +1,61 @@
 # Collection of use cases.
 
-# test stdin with no filename provided
+# 1. test stdin with no filename provided
 python3 sk-cat.py
 
-# test stdin with a '-' provided
+# 2. test stdin with a '-' provided
 python3 sk-cat.py -
 
-# test single filename
+# 3. test single filename
 python3 sk-cat.py testfiles/test.txt
 
-# test single filename and then stdin
+# 4. test single filename and then stdin
 python3 sk-cat.py testfiles/test.txt -
 
-# test stdin and then filenames
+# 5. test stdin and then filenames
 python3 sk-cat.py - testfiles/test.txt
 
-# test multiple filenames
+# 6. test multiple filenames
 python3 sk-cat.py testfiles/test.txt testfiles/test2.txt
 
-# test with a directory
+# 7. test with a directory
 python3 sk-cat.py testfiles
 
-# test with a filename and a directory
+# 8. test with a filename and a directory
 python3 sk-cat.py testfiles/test.txt testfiles
 
-# test pipelining
+# 9. test pipelining
 head -n1 testfiles/test.txt | python3 sk-cat.py -
 
-# test pipelining 2
+# 10. test pipelining 2
 tree | head -n3 | python3 sk-cat.py -
 
-# test with single non existing file
+# 11. test with single non existing file
 python3 sk-cat.py testfiles/file.txt
 
-# test with one existing and one non existing file
+# 12. test with one existing and one non existing file
 python3 sk-cat.py testfiles/test.txt testfiles/file.txt
 
-# TODO: Add functionality for -n
+# 13. input pipelining
+sed G testfiles/test.txt | python3 sk-cat.py
+
+# 14. output pipelining
+python3 sk-cat.py testfiles/test.txt | head -n4
+
+# 15. both input and output pipelining
+sed G testfiles/test.txt | python3 sk-cat.py | head -n4
+
+# 16. test with -n with one file
+python3 sk-cat.py testfiles/test2.txt -n
+
+# 17. test with -n with two files
+python3 sk-cat.py testfiles/test.txt testfiles/test2.txt -n
+
+# 18. test with -n and output pipelining
+python3 sk-cat.py testfiles/test.txt -n | head -n4
+
+# 19. test with -n and input pipelining
+sed G testfiles/test.txt | python3 sk-cat.py -n
+
+# 20. test with -n and stdin
+python3 sk-cat.py -n

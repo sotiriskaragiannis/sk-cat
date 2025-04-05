@@ -2,8 +2,33 @@
 # This is part of the Coding Challenges: https://codingchallenges.fyi/challenges/challenge-cat
 
 import argparse
+import textwrap
 
+# constants
 READ_FROM_STDIN_STRING = "-"
+LEFT_PADDING_SIZE = 6
+
+# globals
+g_lineCounter = 1       # Line count starts from 1
+g_endChar = "\n"        # Intitial end char is new line so that the numbering of lines begins properly
+
+def printTextWithLineNumbers(text):
+    global g_lineCounter
+    global g_endChar
+    file_line_counter = 1
+    lines = text.split("\n")
+    for line in lines:
+        if g_endChar == "\n":
+            line = f"{str(g_lineCounter).rjust(LEFT_PADDING_SIZE)}  {line}" # Add line counter prefix only if there was a new line
+            g_lineCounter += 1  # Increment the global line counter (for next line)
+
+        g_endChar = "" if file_line_counter == len(lines) else "\n" # Calculate new end char
+        file_line_counter += 1
+
+        print(line, end=g_endChar) # Print line
+
+def printText(text):
+    print(text, end="")
 
 def stdinMode():
     while True:
@@ -15,10 +40,13 @@ def stdinMode():
         except:
             break
 
-def filenameMode(filename):
+def filenameMode(filename, args):
     try:
         with open(filename) as file:
-            print(file.read(), end="")
+            if args.number:
+                printTextWithLineNumbers(file.read())
+            else:
+                printText(file.read())
 
     except FileNotFoundError:
         print(f"file {filename} was not found")
@@ -34,18 +62,25 @@ def main(args=None):
     # Initialise the parser
     parser = argparse.ArgumentParser("concatenate and print files")
     parser.add_argument("filenames", nargs='*', help="filenames of the files to concatenate and print", type=str)
+    parser.add_argument("-n", "--number", action='store_true', help="number the output lines")
     args = parser.parse_args()
 
-    # if zero filename args where provided then go to stdin mode
+
+    # If zero filename args where provided then go to stdin mode
     if not args.filenames:
         stdinMode()
     else:
         for filename in args.filenames:
             if filename != READ_FROM_STDIN_STRING:
-                filenameMode(filename)
+                filenameMode(filename, args)
             else:
                 stdinMode()
 
 
 if __name__ == "__main__":
     main()
+
+
+# TODO:
+#   - add number lines in stdin stdinMode (tests: 19, 20)
+#   - fix issue in use case / test 15 with bidirectional pipelining
