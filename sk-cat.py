@@ -12,7 +12,7 @@ LEFT_PADDING_SIZE = 6
 g_lineCounter = 1       # Line count starts from 1
 g_endChar = "\n"        # Intitial end char is new line so that the numbering of lines begins properly
 
-def printTextWithLineNumbers(text):
+def printFileTextWithLineNumbers(text):
     global g_lineCounter
     global g_endChar
     file_line_counter = 1
@@ -27,7 +27,7 @@ def printTextWithLineNumbers(text):
 
         print(line, end=g_endChar) # Print line
 
-def printText(text):
+def printFileText(text):
     print(text, end="")
 
 def stdinMode():
@@ -44,9 +44,9 @@ def filenameMode(filename, args):
     try:
         with open(filename) as file:
             if args.number:
-                printTextWithLineNumbers(file.read())
+                printFileTextWithLineNumbers(file.read())
             else:
-                printText(file.read())
+                printFileText(file.read())
 
     except FileNotFoundError:
         print(f"file {filename} was not found")
