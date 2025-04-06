@@ -14,6 +14,9 @@ LEFT_PADDING_SIZE = 6
 g_lineCounter = 1       # Line count starts from 1
 g_endChar = "\n"        # Intitial end char is new line so that the numbering of lines begins properly
 
+def formatNumberedLine(number, line):
+    return f"{str(number).rjust(LEFT_PADDING_SIZE)}  {line}"
+
 def printFileTextWithLineNumbers(text):
     global g_lineCounter
     global g_endChar
@@ -21,7 +24,7 @@ def printFileTextWithLineNumbers(text):
     lines = text.split("\n")
     for line in lines:
         if g_endChar == "\n":
-            line = f"{str(g_lineCounter).rjust(LEFT_PADDING_SIZE)}  {line}" # Add line counter prefix only if there was a new line
+            line = formatNumberedLine(g_lineCounter, line) # Add line counter prefix only if there was a new line
             g_lineCounter += 1  # Increment the global line counter (for next line)
 
         g_endChar = "" if file_line_counter == len(lines) else "\n" # Calculate new end char
@@ -32,10 +35,21 @@ def printFileTextWithLineNumbers(text):
 def printFileText(text):
     print(text, end="")
 
-def stdinMode():
+def stdinMode(args):
+    global g_lineCounter
+    global g_endChar
     while True:
         try:
-            print(input(""))
+            line = input("")
+            if args.number:
+                if g_endChar == "\n":
+                    line = formatNumberedLine(g_lineCounter, line) # Add line counter prefix only if there was a new line
+                    g_lineCounter += 1  # Increment the global line counter (for next line)
+
+                g_endChar = "\n" # Calculate new end char
+
+            print(line, end=g_endChar)
+
         except KeyboardInterrupt:
             print("")
             exit()
@@ -70,20 +84,16 @@ def main(args=None):
 
     # If zero filename args where provided then go to stdin mode
     if not args.filenames:
-        stdinMode()
+        stdinMode(args)
     else:
         for filename in args.filenames:
             if filename != READ_FROM_STDIN_STRING:
                 filenameMode(filename, args)
             else:
-                stdinMode()
+                stdinMode(args)
 
 
 if __name__ == "__main__":
     # Prevent broken pipe errors when piping to commands like `head`
     signal.signal(signal.SIGPIPE, signal.SIG_DFL)
     main()
-
-
-# TODO:
-#   - add number lines in stdin stdinMode (tests: 19, 20)
