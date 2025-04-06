@@ -3,6 +3,8 @@
 
 import argparse
 import textwrap
+import sys
+import signal
 
 # constants
 READ_FROM_STDIN_STRING = "-"
@@ -78,9 +80,10 @@ def main(args=None):
 
 
 if __name__ == "__main__":
+    # Prevent broken pipe errors when piping to commands like `head`
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
     main()
 
 
 # TODO:
 #   - add number lines in stdin stdinMode (tests: 19, 20)
-#   - fix issue in use case / test 15 with bidirectional pipelining
