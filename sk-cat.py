@@ -75,6 +75,10 @@ def filenameMode(filename, args):
 
 
 def main(args=None):
+
+    # Prevent broken pipe errors when piping to commands like `head`
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+
     # Initialise the parser
     parser = argparse.ArgumentParser("concatenate and print files")
     parser.add_argument("filenames", nargs='*', help="filenames of the files to concatenate and print", type=str)
@@ -94,6 +98,4 @@ def main(args=None):
 
 
 if __name__ == "__main__":
-    # Prevent broken pipe errors when piping to commands like `head`
-    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
     main()
